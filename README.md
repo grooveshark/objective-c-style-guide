@@ -29,6 +29,7 @@ Here are some of the documents from Apple that informed the style guide. If some
 * [Naming](#naming)
   * [Underscores](#underscores)
 * [Methods](#methods)
+* [Method Declarations](#method-declarations)
 * [Variables](#variables)
 * [Property Attributes](#property-attributes)
 * [Dot-Notation Syntax](#dot-notation-syntax)
@@ -230,6 +231,8 @@ The usage of the word "and" is reserved.  It should not be used for multiple par
 - (instancetype)initWithWidth:(CGFloat)width andHeight:(CGFloat)height;
 - (instancetype)initWith:(int)width and:(int)height;  // Never do this.
 ```
+
+## Method Declarations
 
 In method declarations, the opening bracket (`{`) should appear on the next line, and *not* appear on the same line as the method name.
 
