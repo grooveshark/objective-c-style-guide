@@ -289,14 +289,14 @@ Property attributes should be explicitly listed, and will help new programmers w
 
 ```objc
 @property (weak, nonatomic) IBOutlet UIView *containerView;
-@property (strong, nonatomic) NSString *tutorialName;
+@property (strong, nonatomic) NSNumber *userID;
 ```
 
 **Not Preferred:**
 
 ```objc
 @property (nonatomic, weak) IBOutlet UIView *containerView;
-@property (nonatomic) NSString *tutorialName;
+@property (nonatomic) NSNumber *userID;
 ```
 
 Properties with mutable counterparts (e.g. NSString) should prefer `copy` instead of `strong`. 
