@@ -37,6 +37,7 @@ Here are some of the documents from Apple that informed the style guide. If some
 * [Constants](#constants)
 * [Enumerated Types](#enumerated-types)
 * [Case Statements](#case-statements)
+* [If Statements](#if-statements)
 * [Private Properties](#private-properties)
 * [Booleans](#booleans)
 * [Conditionals](#conditionals)
@@ -47,6 +48,7 @@ Here are some of the documents from Apple that informed the style guide. If some
 * [Golden Path](#golden-path)
 * [Error handling](#error-handling)
 * [Singletons](#singletons)
+* [Localization](#localization)
 * [Xcode Project](#xcode-project)
 
 
@@ -177,7 +179,7 @@ Constants should be camel-case with all words capitalized and prefixed by the re
 **Preferred:**
 
 ```objc
-static NSTimeInterval const GSKTutorialViewControllerNavigationFadeAnimationDuration = 0.3;
+static NSTimeInterval const GSKTutorialVCNavigationFadeAnimationDuration = 0.3;
 ```
 
 **Not Preferred:**
@@ -212,6 +214,8 @@ Local variables should not contain underscores.
 
 In method signatures, there should be a space after the method type (-/+ symbol). There should be a space between the method segments (matching Apple's style).  Always include a keyword and be descriptive with the word before the argument which describes the argument.
 
+Handlers for buttons, gesture recognizers, notifications, KVO, etc. should start with “handle”.
+
 The usage of the word "and" is reserved.  It should not be used for multiple parameters as illustrated in the `initWithWidth:height:` example below.
 
 **Preferred:**
@@ -220,6 +224,8 @@ The usage of the word "and" is reserved.  It should not be used for multiple par
 - (void)sendAction:(SEL)aSelector to:(id)anObject forAllCells:(BOOL)flag;
 - (id)viewWithTag:(NSInteger)tag;
 - (instancetype)initWithWidth:(CGFloat)width height:(CGFloat)height;
+- (void)showSmallPlayer;
+- (IBAction)handleSignInButton:(id)sender;
 ```
 
 **Not Preferred:**
@@ -230,6 +236,8 @@ The usage of the word "and" is reserved.  It should not be used for multiple par
 - (id)taggedView:(NSInteger)tag;
 - (instancetype)initWithWidth:(CGFloat)width andHeight:(CGFloat)height;
 - (instancetype)initWith:(int)width and:(int)height;  // Never do this.
+- (void)smallPlayer;
+- (IBAction)signInButton:(id)sender;
 ```
 
 ## Method Declarations
@@ -251,6 +259,8 @@ In method declarations, the opening bracket (`{`) should appear on the next line
     //do important things here
 }
 ```
+
+Try to keep methods to under a page long when at all possible. As with all conventions, it’s not hard and fast but a goal to be achieved. Refactor code out into easily definable (and describable) chunks with applicable descriptive names.
 
 ## Variables
 
@@ -363,7 +373,7 @@ Constants are preferred over in-line string literals or numbers, as they allow f
 **Preferred:**
 
 ```objc
-static NSString * const GSKAboutViewControllerCompanyName = @"Grooveshark";
+static NSString * const GSKAboutVCCompanyName = @"Grooveshark";
 
 static CGFloat const GSKImageThumbnailHeight = 50.0;
 ```
@@ -380,7 +390,7 @@ static CGFloat const GSKImageThumbnailHeight = 50.0;
 
 When using `enum`s, it is recommended to use the new fixed underlying type specification because it has stronger type checking and code completion. The SDK now includes a macro to facilitate and encourage use of fixed underlying types: `NS_ENUM()`
 
-**For Example:**
+**Preferred:**
 
 ```objc
 typedef NS_ENUM(NSInteger, GSKLeftMenuTopItemType) {
@@ -413,7 +423,7 @@ enum GlobalConstants {
 ```
 
 
-## Case Statements
+## Case statements
 
 Braces are not required for case statements, unless enforced by the complier.  
 When a case contains more than one line, braces should be added.
@@ -454,7 +464,7 @@ switch (condition) {
 
 ```
 
-When using an enumerated type for a switch, 'default' is not needed.   For example:
+When using an enumerated type for a switch, 'default' is not needed. For example:
 
 ```objc
 GSKLeftMenuTopItemType menuType = GSKLeftMenuTopItemMain;
@@ -469,6 +479,27 @@ switch (menuType) {
   case GSKLeftMenuTopItemSchedule:
     // ...
     break;
+}
+```
+
+
+## If statements
+
+Place constants first in equality/inequality tests.
+
+**Preferred:**
+
+```objc
+if (NSNotFound == range.location) {
+  // ...
+}
+```
+
+**Not Preferred:**
+
+```objc
+if (range.location == NSNotFound) {
+  // ...
 }
 ```
 
@@ -627,7 +658,8 @@ When coding with conditionals, the left hand margin of the code should be the "g
 **Preferred:**
 
 ```objc
-- (void)someMethod {
+- (void)someMethod 
+{
   if (![someOther boolValue]) {
 	return;
   }
@@ -639,7 +671,8 @@ When coding with conditionals, the left hand margin of the code should be the "g
 **Not Preferred:**
 
 ```objc
-- (void)someMethod {
+- (void)someMethod 
+{
   if ([someOther boolValue]) {
     //Do something important
   }
@@ -687,6 +720,14 @@ Singleton objects should use a thread-safe pattern for creating their shared ins
 ```
 This will prevent [possible and sometimes prolific crashes](http://cocoasamurai.blogspot.com/2011/04/singletons-your-doing-them-wrong.html).
 
+
+## Localization
+
+* NO string constants for any value that will be displayed onscreen.
+* Be sure that keys for NSLocalizedString text values are identical. Every instance of “Cancel”, for example, needs to have the key “Cancel, button title”. Otherwise, it’ll show up multiple times in the .strings files and will possibly be translated incorrectly or inconsistently. Plus, having a single occurrence of each individual string makes for a smaller code footprint.
+* English is one of the more concise languages around. Keep this in mind when laying out screen elements and allow for German equivalents which will undoubtedly have more characters and take up more screen real-estate than in the base language.
+* Keep in mind that using NSString formatting may require a different ordering of the words when displayed in a foreign script.
+* Punctuation is different in different scripts: Angle brackets instead of quotes, periods instead of commas, etc. “When in doubt, leave it out.”
 
 ## Xcode project
 
